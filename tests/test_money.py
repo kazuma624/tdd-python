@@ -17,6 +17,12 @@ class TestMoney(unittest.TestCase):
             money.Dollar(5).equals(money.Dollar(6))
         )
 
+    def test_franc_multiplication(self):
+        # Franc クラスの変数を宣言
+        five = money.Franc(5)
+        self.assertEqual(money.Franc(10), five.times(2))
+        self.assertEqual(money.Franc(15), five.times(3))
+
 
 if __name__ == '__main__':
     unittest.main()
