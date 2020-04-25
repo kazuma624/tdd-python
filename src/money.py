@@ -3,8 +3,10 @@ class Money:
         self._amount = amount
 
     def equals(self, obj):
-        money = obj
-        return self._amount == money._amount
+        return (
+            self._amount == obj._amount
+            and type(self) == type(obj)
+        )
 
     def __eq__(self, obj):
         if not isinstance(obj, Money):
