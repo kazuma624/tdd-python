@@ -1,7 +1,11 @@
 import unittest
 
-from src.money import Money
-from src.money import Bank
+from src.money import (
+    Bank,
+    Money,
+    Sum,
+)
+
 
 class TestMoney(unittest.TestCase):
     def test_multiplication(self):
@@ -30,6 +34,25 @@ class TestMoney(unittest.TestCase):
         bank = Bank()
         reduced = bank.reduce(my_sum, 'USD')
         self.assertEqual(Money.dollar(10), reduced)
+
+    def test_plus_returns_sum(self):
+        five = Money.dollar(5)
+        result = five.plus(five)
+        my_sum = result
+        self.assertEqual(five, my_sum.augend)
+        self.assertEqual(five, my_sum.addend)
+
+    def test_reduce_sum(self):
+        my_sum = Sum(Money.dollar(3), Money.dollar(4))
+        bank = Bank()
+        result = bank.reduce(my_sum, 'USD')
+        self.assertEqual(Money.dollar(7), result)
+
+    def test_reduce_money(self):
+        bank = Bank()
+        result = bank.reduce(Money.dollar(1), 'USD')
+        self.assertEqual(Money.dollar(1), result)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,13 @@
-class Money:
+from abc import ABCMeta, abstractmethod
+
+
+class Expression(metaclass=ABCMeta):
+    @abstractmethod
+    def reduce(to):
+        pass
+
+
+class Money(Expression):
     def __init__(self, amount, currency):
         self._amount = amount
         self._currency = currency
@@ -7,7 +16,10 @@ class Money:
         return Money(self._amount * multiplier, self._currency)
 
     def plus(self, addend):
-        return Money(self._amount + addend._amount, self._currency)
+        return Sum(self, addend)
+
+    def reduce(self, to):
+        return self
 
     def currency(self):
         return self._currency
@@ -56,4 +68,14 @@ class Money:
 
 class Bank:
     def reduce(self, source, to):
-        return Money.dollar(10)
+        return source.reduce(to)
+
+
+class Sum(Expression):
+    def __init__(self, augend, addend):
+        self.augend = augend
+        self.addend = addend
+
+    def reduce(self, to):
+        amount = self.augend._amount + self.addend._amount
+        return Money(amount, to)
