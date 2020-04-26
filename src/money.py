@@ -1,23 +1,22 @@
-from abc import ABCMeta
-from abc import abstractmethod
-
-class Money(metaclass=ABCMeta):
+class Money:
     def __init__(self, amount, currency):
         self._amount = amount
         self._currency = currency
 
-    @abstractmethod
     def times(self, multiplier):
-        pass
+        return Money(self._amount * multiplier, self._currency)
 
     def currency(self):
         return self._currency
 
-    def equals(self, obj):
+    def equals(self, money):
         return (
-            self._amount == obj._amount
-            and type(self) == type(obj)
+            self._amount == money._amount
+            and self.currency() == money.currency()
         )
+
+    def __str__(self):
+        return self._amount + ' ' + self._currency
 
     @staticmethod
     def dollar(amount):
@@ -56,13 +55,7 @@ class Dollar(Money):
     def __init__(self, amount, currency):
         super().__init__(amount, currency)
 
-    def times(self, multiplier):
-        return Money.dollar(self._amount * multiplier)
-
 
 class Franc(Money):
     def __init__(self, amount, currency):
         super().__init__(amount, currency)
-
-    def times(self, multiplier):
-        return Money.franc(self._amount * multiplier)
