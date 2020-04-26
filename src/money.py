@@ -20,11 +20,11 @@ class Money:
 
     @staticmethod
     def dollar(amount):
-        return Dollar(amount, 'USD')
+        return Money(amount, 'USD')
 
     @staticmethod
     def franc(amount):
-        return Franc(amount, 'CHF')
+        return Money(amount, 'CHF')
 
     def __eq__(self, obj):
         if not isinstance(obj, Money):
@@ -49,13 +49,3 @@ class Money:
 
     def __ge__(self, obj):
         return not self.__lt__(obj)
-
-
-class Dollar(Money):
-    def __init__(self, amount, currency):
-        super().__init__(amount, currency)
-
-
-class Franc(Money):
-    def __init__(self, amount, currency):
-        super().__init__(amount, currency)
