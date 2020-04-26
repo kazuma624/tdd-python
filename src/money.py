@@ -1,12 +1,27 @@
-class Money:
+from abc import ABCMeta
+from abc import abstractmethod
+
+class Money(metaclass=ABCMeta):
     def __init__(self, amount):
         self._amount = amount
+
+    @abstractmethod
+    def times(self, multiplier):
+        pass
 
     def equals(self, obj):
         return (
             self._amount == obj._amount
             and type(self) == type(obj)
         )
+
+    @staticmethod
+    def dollar(amount):
+        return Dollar(amount)
+
+    @staticmethod
+    def franc(amount):
+        return Franc(amount)
 
     def __eq__(self, obj):
         if not isinstance(obj, Money):

@@ -4,33 +4,31 @@ import unittest
 
 class TestMoney(unittest.TestCase):
     def test_multiplication(self):
-        # Dollar クラスの変数を宣言
-        five = money.Dollar(5)
-        self.assertEqual(money.Dollar(10), five.times(2))
-        self.assertEqual(money.Dollar(15), five.times(3))
+        five = money.Money.dollar(5)
+        self.assertEqual(money.Money.dollar(10), five.times(2))
+        self.assertEqual(money.Money.dollar(15), five.times(3))
 
     def test_equality(self):
         self.assertTrue(
-            money.Dollar(5).equals(money.Dollar(5))
+            money.Money.dollar(5).equals(money.Money.dollar(5))
         )
         self.assertFalse(
-            money.Dollar(5).equals(money.Dollar(6))
+            money.Money.dollar(5).equals(money.Money.dollar(6))
         )
         self.assertTrue(
-            money.Franc(5).equals(money.Franc(5))
+            money.Money.franc(5).equals(money.Money.franc(5))
         )
         self.assertFalse(
-            money.Franc(5).equals(money.Franc(6))
+            money.Money.franc(5).equals(money.Money.franc(6))
         )
         self.assertFalse(
-            money.Franc(5).equals(money.Dollar(5))
+            money.Money.franc(5).equals(money.Money.dollar(5))
         )
 
     def test_franc_multiplication(self):
-        # Franc クラスの変数を宣言
-        five = money.Franc(5)
-        self.assertEqual(money.Franc(10), five.times(2))
-        self.assertEqual(money.Franc(15), five.times(3))
+        five = money.Money.franc(5)
+        self.assertEqual(money.Money.franc(10), five.times(2))
+        self.assertEqual(money.Money.franc(15), five.times(3))
 
 
 if __name__ == '__main__':
