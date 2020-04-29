@@ -3,6 +3,10 @@ from abc import ABCMeta, abstractmethod
 
 class Expression(metaclass=ABCMeta):
     @abstractmethod
+    def plus(addend):
+        pass
+
+    @abstractmethod
     def reduce(bank, to):
         pass
 
@@ -38,7 +42,7 @@ class Money(Expression):
         )
 
     def __str__(self):
-        return self._amount + ' ' + self._currency
+        return f'{self._amount} {self._currency}'
 
     @staticmethod
     def dollar(amount):
@@ -71,8 +75,12 @@ class Sum(Expression):
         self.addend = addend
 
     def reduce(self, bank, to):
-        amount = self.augend._amount + self.addend._amount
+        amount = (self.augend.reduce(bank, to)._amount
+                    + self.addend.reduce(bank, to)._amount)
         return Money(amount, to)
+
+    def plus(self, addend):
+        pass
 
 
 class Pair:
