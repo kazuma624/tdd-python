@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 
 class Expression(metaclass=ABCMeta):
     @abstractmethod
-    def reduce(to):
+    def reduce(bank, to):
         pass
 
 
@@ -18,13 +18,20 @@ class Money(Expression):
     def plus(self, addend):
         return Sum(self, addend)
 
-    def reduce(self, to):
-        return self
+    def reduce(self, bank, to):
+        rate = bank.rate(self._currency, to)
+        return Money(self._amount / rate, to)
 
     def currency(self):
         return self._currency
 
-    def equals(self, money):
+    def __eq__(self, money):
+        """
+        Java で equals メソッドをオーバーライドしたことに相当
+        演算子 == をオーバーライドする
+        """
+        if not isinstance(money, Money):
+            return NotImplemented
         return (
             self._amount == money._amount
             and self.currency() == money.currency()
@@ -41,34 +48,21 @@ class Money(Expression):
     def franc(amount):
         return Money(amount, 'CHF')
 
-    def __eq__(self, obj):
-        if not isinstance(obj, Money):
-            # 特殊な二項演算のメソッドが他の型に対して演算が実装されていない
-            return NotImplemented
-        return self._amount == obj._amount
-
-    def __lt__(self, obj):
-        if not isinstance(obj, Money):
-            # 特殊な二項演算のメソッドが他の型に対して演算が実装されていない
-            return NotImplemented
-        return self._amount < obj._amount
-
-    def __ne__(self, obj):
-        return not self.__eq__(obj)
-
-    def __le__(self, obj):
-        return self.__lt__(obj) or self.__eq__(obj)
-
-    def __gt__(self, obj):
-        return not self.__le__(obj)
-
-    def __ge__(self, obj):
-        return not self.__lt__(obj)
-
 
 class Bank:
+    __rates = dict()
+
     def reduce(self, source, to):
-        return source.reduce(to)
+        return source.reduce(self, to)
+
+    def add_rate(self, _from, to, rate):
+        self.__rates[Pair(_from, to)] = rate
+
+    def rate(self, _from, to):
+        if _from == to:
+            return 1
+
+        return self.__rates.get(Pair(_from, to))
 
 
 class Sum(Expression):
@@ -76,6 +70,27 @@ class Sum(Expression):
         self.augend = augend
         self.addend = addend
 
-    def reduce(self, to):
+    def reduce(self, bank, to):
         amount = self.augend._amount + self.addend._amount
         return Money(amount, to)
+
+
+class Pair:
+    def __init__(self, _from, to):
+        self.__from = _from
+        self.__to = to
+
+    def __eq__(self, pair):
+        """
+        Java で equals メソッドをオーバーライドしたことに相当
+        演算子 == をオーバーライドする
+        """
+        if not isinstance(pair, Pair):
+            return NotImplemented
+        return self.__from == pair.__from and self.__to == pair.__to
+
+    def __hash__(self):
+        """
+        Java で hashCode メソッドをオーバーライドしたことに相当
+        """
+        return 0

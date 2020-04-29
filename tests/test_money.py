@@ -14,15 +14,9 @@ class TestMoney(unittest.TestCase):
         self.assertEqual(Money.dollar(15), five.times(3))
 
     def test_equality(self):
-        self.assertTrue(
-            Money.dollar(5).equals(Money.dollar(5))
-        )
-        self.assertFalse(
-            Money.dollar(5).equals(Money.dollar(6))
-        )
-        self.assertFalse(
-            Money.franc(5).equals(Money.dollar(5))
-        )
+        self.assertTrue(Money.dollar(5) == Money.dollar(5))
+        self.assertFalse(Money.dollar(5) == Money.dollar(6))
+        self.assertFalse(Money.franc(5) == Money.dollar(5))
 
     def test_currency(self):
         self.assertEqual('USD', Money.dollar(1).currency())
@@ -52,6 +46,15 @@ class TestMoney(unittest.TestCase):
         bank = Bank()
         result = bank.reduce(Money.dollar(1), 'USD')
         self.assertEqual(Money.dollar(1), result)
+
+    def test_reduce_money_different_currency(self):
+        bank = Bank()
+        bank.add_rate('CHF', 'USD', 2)
+        result = bank.reduce(Money.franc(2), 'USD')
+        self.assertEqual(Money.dollar(1), result)
+
+    def test_identity_rate(self):
+        self.assertEqual(1, Bank().rate('USD', 'USD'))
 
 
 if __name__ == '__main__':
