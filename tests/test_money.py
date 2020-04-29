@@ -24,22 +24,22 @@ class TestMoney(unittest.TestCase):
 
     def test_simple_addition(self):
         five = Money.dollar(5)
-        my_sum = five.plus(five)
+        _sum = five.plus(five)
         bank = Bank()
-        reduced = bank.reduce(my_sum, 'USD')
+        reduced = bank.reduce(_sum, 'USD')
         self.assertEqual(Money.dollar(10), reduced)
 
     def test_plus_returns_sum(self):
         five = Money.dollar(5)
         result = five.plus(five)
-        my_sum = result
-        self.assertEqual(five, my_sum.augend)
-        self.assertEqual(five, my_sum.addend)
+        _sum = result
+        self.assertEqual(five, _sum.augend)
+        self.assertEqual(five, _sum.addend)
 
     def test_reduce_sum(self):
-        my_sum = Sum(Money.dollar(3), Money.dollar(4))
+        _sum = Sum(Money.dollar(3), Money.dollar(4))
         bank = Bank()
-        result = bank.reduce(my_sum, 'USD')
+        result = bank.reduce(_sum, 'USD')
         self.assertEqual(Money.dollar(7), result)
 
     def test_reduce_money(self):
@@ -63,6 +63,24 @@ class TestMoney(unittest.TestCase):
         bank.add_rate('CHF', 'USD', 2)
         result = bank.reduce(five_bucks.plus(ten_francs), 'USD')
         self.assertEqual(Money.dollar(10), result)
+
+    def test_sum_plus_money(self):
+        five_bucks = Money.dollar(5)
+        ten_francs = Money.franc(10)
+        bank = Bank()
+        bank.add_rate('CHF', 'USD', 2)
+        _sum = Sum(five_bucks, ten_francs).plus(five_bucks)
+        result = bank.reduce(_sum, 'USD')
+        self.assertEqual(Money.dollar(15), result)
+
+    def test_sum_times(self):
+        five_bucks = Money.dollar(5)
+        ten_francs = Money.franc(10)
+        bank = Bank()
+        bank.add_rate('CHF', 'USD', 2)
+        _sum = Sum(five_bucks, ten_francs).times(2)
+        result = bank.reduce(_sum, 'USD')
+        self.assertEqual(Money.dollar(20), result)
 
 
 if __name__ == '__main__':

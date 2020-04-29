@@ -10,6 +10,10 @@ class Expression(metaclass=ABCMeta):
     def reduce(bank, to):
         pass
 
+    @abstractmethod
+    def times(multiplier):
+        pass
+
 
 class Money(Expression):
     def __init__(self, amount, currency):
@@ -80,7 +84,12 @@ class Sum(Expression):
         return Money(amount, to)
 
     def plus(self, addend):
-        pass
+        return Sum(self, addend)
+
+    def times(self, multiplier):
+        return Sum(
+            self.augend.times(multiplier), self.addend.times(multiplier)
+        )
 
 
 class Pair:
