@@ -16,7 +16,8 @@ class TestCase:
             method()
         except:
             result.testFailed()
-        self.tearDown()
+        finally:
+            self.tearDown()
 
 
 class WasRun(TestCase):
